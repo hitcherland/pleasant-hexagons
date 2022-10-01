@@ -41,6 +41,10 @@ class HexBlock {
         this.g.gain.setValueAtTime(0, audioContext.currentTime);
     }
 
+    beepInit() {
+        
+    }
+
     beep() {
         this.g.gain.setValueAtTime(0.05, audioContext.currentTime);
         this.g.gain.exponentialRampToValueAtTime(
@@ -158,43 +162,6 @@ class HexBlock {
     }
 }
 
-const canvas = document.getElementById('canvas');
-
-const win = Math.min(window.innerHeight, window.innerWidth);
-const options = {
-    width: win,
-    height: win,
-};
-const width = options.width;
-const height = options.height;
-const center = [options.width / 2, options.height / 2];
-
-canvas.width = width;
-canvas.height = height;
-
-const ctx = canvas.getContext('2d');
-
-const factor = Math.sqrt(3) / 2;
-const img = document.createElement('img');
-let bg;
-
-
-const blocks = [];
-
-const size = options.width / 10;
-const R = 5;
-for(let s=-R; s<=R; s++) {
-    for(let q=Math.max(-R, -s-R); q<=Math.min(R, -s+R); q++) {
-        blocks.push(new HexBlock(q, 0, s, size, Math.random(), 360 * Math.random()))
-    }
-}
-
-blocks.sort((a, b) => {
-    return a.compare(b);
-});
-
-window.lastBlock = blocks[blocks.length - 1];
-
 function animate(timestamp) {
     ctx.clearRect(0, 0, options.width, options.height);
     
@@ -206,10 +173,50 @@ function animate(timestamp) {
     requestAnimationFrame(animate);
 }
 
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const img = document.createElement('img');
+const win = Math.min(window.innerHeight, window.innerWidth);
+const factor = Math.sqrt(3) / 2;
+const options = {
+    width: win,
+    height: win,
+};
+const width = options.width;
+const height = options.height;
+const center = [options.width / 2, options.height / 2];
+const blocks = [];
+let bg;
+
 ctx.lineWidth = 2;
 img.onload = function() {
     bg = ctx.createPattern(img, "repeat")
-    animate(0);
+    document.getElementById('start').onclick = function() {
+
+
+
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        
+        
+        
+        const size = options.width / 10;
+        const R = 5;
+        for(let s=-R; s<=R; s++) {
+            for(let q=Math.max(-R, -s-R); q<=Math.min(R, -s+R); q++) {
+                blocks.push(new HexBlock(q, 0, s, size, Math.random(), 360 * Math.random()))
+            }
+        }
+        
+        blocks.sort((a, b) => {
+            return a.compare(b);
+        });
+        animate(0);
+        document.getElementById('start').style.visibility = "hidden";
+    }
 }
+
 
 img.src = 'bg.png';
